@@ -1,6 +1,10 @@
 [package]
+authors = ["Dhruv kumar <darbaga10@gmail.com>"]
 name = "tolk"
 version = "0.1.0"
-authors = ["Dhruv kumar <darbaga10@gmail.com>"]
 
 [dependencies]
+
+[dependencies.tolk-sys]
+optional = false
+path = "../tolk-sys"
