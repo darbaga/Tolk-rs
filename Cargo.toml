@@ -2,7 +2,7 @@
 authors = ["Dhruv kumar <darbaga10@gmail.com>"]
 name = "tolk"
 description = "bindings to tolk.dll, a library to talk to screen readers"
-repository = "https://github.com/darbaga/tolk"
+repository = "https://github.com/darbaga/tolk-rs"
 readme = "README.md"
 keywords = ["accessibility", "a11y"]
 categories = ["api-bindings"]
