@@ -16,7 +16,7 @@ And add this to your Cargo.toml (or use cargo add if you have that):
 > tolk = "0.1"
 
 ## Documentation
-Documentation is auto-generated [here](http://docs.rs/tolk). You don't really need anything else.
+Documentation is auto-generated [here](https://docs.rs/tolk/*/x86_64-pc-windows-msvc/tolk/). You don't really need anything else.
 
 ## Todo
 * Error handling
