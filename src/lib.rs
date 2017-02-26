@@ -2,7 +2,7 @@ extern crate tolk_sys;
 
 use tolk_sys::*;
 
-struct Tolk;
+pub struct Tolk;
 
 impl Tolk {
     pub fn new() -> Tolk {
