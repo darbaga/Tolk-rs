@@ -4,8 +4,6 @@ name = "tolk"
 version = "0.1.0"
 
 [dependencies]
-encoding = "0.2.33"
-libc = "0.2.20"
 
 [dependencies.tolk-sys]
 optional = false
