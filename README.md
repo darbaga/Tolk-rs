@@ -15,6 +15,9 @@ Download tolk.zip from [here](https://ci.appveyor.com/api/projects/dkager/tolk/a
 And add this to your Cargo.toml (or use cargo add if you have that):
 > tolk = "0.1"
 
+## Documentation
+Documentation is auto-generated [here](http://docs.rs/tolk). You don't really need anything else.
+
 ## Todo
 * Error handling
 * Make speak, output, and braille only work if DetectScreenReader returns a string
