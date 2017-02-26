@@ -19,8 +19,25 @@ impl Tolk {
     }
 
     pub fn output(&self, s: &str) {
-        let widetext = OsStr::new(s).encode_wide().chain(Some(0).into_iter()).collect::<Vec<_>>().as_ptr();
-        unsafe { Tolk_Output(widetext, true)};
+        unsafe { Tolk_Output(str_to_wchar_t(s), true)};
+    }
+
+    pub fn speak (&self, s: &str) {
+        if unsafe { Tolk_HasSpeech() } {
+            unsafe { Tolk_Speak(str_to_wchar_t(s), true)};
+        } else {
+            // Fallback on self.output
+            self.output(s)
+        }
+    }
+
+    pub fn braille (&self, s: &str) {
+        if unsafe { Tolk_HasBraille() } {
+            unsafe { Tolk_Braille(str_to_wchar_t(s))};
+        } else {
+            // Fallback on self.output
+            self.output(s);
+        }
     }
 }
 
@@ -28,6 +45,10 @@ impl Drop for Tolk {
     fn drop(&mut self) {
         unsafe { Tolk_Unload(); }
     }
+}
+
+fn str_to_wchar_t(s: &str) -> *const u16 {
+    OsStr::new(s).encode_wide().chain(Some(0).into_iter()).collect::<Vec<_>>().as_ptr()
 }
 
 unsafe fn string_from_wchar_t(orig: *const u16) -> String {
