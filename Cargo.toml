@@ -1,6 +1,12 @@
 [package]
 authors = ["Dhruv kumar <darbaga10@gmail.com>"]
 name = "tolk"
+description = "bindings to tolk.dll, a library to talk to screen readers"
+repository = "https://github.com/darbaga/tolk"
+readme = "README.md"
+keywords = ["accessibility", "a11y"]
+categories = ["api-bindings"]
+license = "MIT"
 version = "0.1.0"
 
 [dependencies]
