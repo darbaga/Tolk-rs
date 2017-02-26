@@ -4,7 +4,4 @@ name = "tolk"
 version = "0.1.0"
 
 [dependencies]
-
-[dependencies.tolk-sys]
-optional = false
-path = "../tolk-sys"
+tolk-sys = "0.1.0"
