@@ -1,3 +1,4 @@
+#![cfg(windows)]
 extern crate tolk_sys;
 
 use std::ffi::OsStr;
