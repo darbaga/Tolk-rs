@@ -11,21 +11,29 @@ pub struct Tolk;
 
 impl Tolk {
     pub fn new() -> Tolk {
-        unsafe { Tolk_Load(); }
+        unsafe {
+            Tolk_Load();
+        }
         Tolk
     }
 
     pub fn detect_screen_reader(&self) -> String {
-        unsafe { return string_from_wchar_t(Tolk_DetectScreenReader());}
+        unsafe {
+            return string_from_wchar_t(Tolk_DetectScreenReader());
+        }
     }
 
     pub fn output(&self, s: &str) {
-        unsafe { Tolk_Output(str_to_wchar_t(s), true)};
+        unsafe {
+            Tolk_Output(str_to_wchar_t(s), true);
+        }
     }
 
     pub fn speak (&self, s: &str) {
         if unsafe { Tolk_HasSpeech() } {
-            unsafe { Tolk_Speak(str_to_wchar_t(s), true)};
+            unsafe {
+                Tolk_Speak(str_to_wchar_t(s), true);
+            }
         } else {
             // Fallback on self.output
             self.output(s)
@@ -34,7 +42,9 @@ impl Tolk {
 
     pub fn braille (&self, s: &str) {
         if unsafe { Tolk_HasBraille() } {
-            unsafe { Tolk_Braille(str_to_wchar_t(s))};
+            unsafe {
+                Tolk_Braille(str_to_wchar_t(s));
+            }
         } else {
             // Fallback on self.output
             self.output(s);
