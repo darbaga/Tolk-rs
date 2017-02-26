@@ -9,7 +9,9 @@ Download tolk.zip from [here](https://ci.appveyor.com/api/projects/dkager/tolk/a
   * C:\Program Files\Rust\lib\rustlib\x86_64-pc-windows-msvc\lib if you're using a default rust installation
   * LIB if you have the LIB environment variable defined
 * Copy bin\\{x86, x64}\tolk.dll to the directory with your project's Cargo.toml
+* Copy everything from the lib directory to the directory with your project's Cargo.toml
 
+(x86 and x64 is the kind of rust binaries you have)
 And add this to your Cargo.toml (or use cargo add if you have that):
 > tolk = "0.1"
 
