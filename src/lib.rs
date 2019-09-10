@@ -23,20 +23,20 @@ impl Tolk {
         }
     }
 
-    pub fn output(&self, s: &str) {
+    pub fn output(&self, s: &str, interrupt: bool) {
         unsafe {
-            Tolk_Output(str_to_wchar_t(s), true);
+            Tolk_Output(str_to_wchar_t(s), interrupt);
         }
     }
 
-    pub fn speak (&self, s: &str) {
+    pub fn speak (&self, s: &str, interrupt: bool) {
         if unsafe { Tolk_HasSpeech() } {
             unsafe {
-                Tolk_Speak(str_to_wchar_t(s), true);
+                Tolk_Speak(str_to_wchar_t(s), interrupt);
             }
         } else {
             // Fallback on self.output
-            self.output(s)
+            self.output(s, interrupt)
         }
     }
 
@@ -47,7 +47,7 @@ impl Tolk {
             }
         } else {
             // Fallback on self.output
-            self.output(s);
+            self.output(s, false);
         }
     }
 }
