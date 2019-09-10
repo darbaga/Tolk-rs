@@ -27,6 +27,18 @@ impl Tolk {
         }
     }
 
+    pub fn has_speech(&self) -> bool {
+        unsafe {
+            Tolk_HasSpeech()
+        }
+    }
+
+    pub fn has_braille(&self) -> bool {
+        unsafe {
+            Tolk_HasBraille()
+        }
+    }
+
     pub fn detect_screen_reader(&self) -> Option<String> {
         let screen_reader = unsafe {
             Tolk_DetectScreenReader()
@@ -53,6 +65,18 @@ impl Tolk {
     pub fn braille<S: Into<String>>(&self, s: S) -> bool {
         unsafe {
             Tolk_Braille(str_to_wchar_t(&s.into()))
+        }
+    }
+
+    pub fn is_speaking(&self) -> bool {
+        unsafe {
+            Tolk_IsSpeaking()
+        }
+    }
+
+    pub fn silence(&self) -> bool {
+        unsafe {
+            Tolk_Silence()
         }
     }
 }
