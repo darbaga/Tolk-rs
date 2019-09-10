@@ -21,21 +21,21 @@ impl Tolk {
         }
     }
 
-    pub fn output(&self, s: &str, interrupt: bool) {
+    pub fn output<S: Into<String>>(&self, s: S, interrupt: bool) {
         unsafe {
-            Tolk_Output(str_to_wchar_t(s), interrupt);
+            Tolk_Output(str_to_wchar_t(&s.into()), interrupt);
         }
     }
 
-    pub fn speak (&self, s: &str, interrupt: bool) -> bool {
+    pub fn speak<S: Into<String>>(&self, s: S, interrupt: bool) -> bool {
         unsafe {
-            Tolk_Speak(str_to_wchar_t(s), interrupt)
+            Tolk_Speak(str_to_wchar_t(&s.into()), interrupt)
         }
     }
 
-    pub fn braille (&self, s: &str) -> bool {
+    pub fn braille<S: Into<String>>(&self, s: S) -> bool {
         unsafe {
-            Tolk_Braille(str_to_wchar_t(s))
+            Tolk_Braille(str_to_wchar_t(&s.into()))
         }
     }
 }
