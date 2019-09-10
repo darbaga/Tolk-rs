@@ -15,6 +15,18 @@ impl Tolk {
         Tolk
     }
 
+    pub fn try_sapi(&self, v: bool) {
+        unsafe {
+            Tolk_TrySAPI(v);
+        }
+    }
+
+    pub fn prefer_sapi(&self, v: bool) {
+        unsafe {
+            Tolk_PreferSAPI(v);
+        }
+    }
+
     pub fn detect_screen_reader(&self) -> Option<String> {
         let screen_reader = unsafe {
             Tolk_DetectScreenReader()
