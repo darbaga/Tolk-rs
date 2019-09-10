@@ -28,21 +28,15 @@ impl Tolk {
     }
 
     pub fn has_speech(&self) -> bool {
-        unsafe {
-            Tolk_HasSpeech()
-        }
+        unsafe { Tolk_HasSpeech() }
     }
 
     pub fn has_braille(&self) -> bool {
-        unsafe {
-            Tolk_HasBraille()
-        }
+        unsafe { Tolk_HasBraille() }
     }
 
     pub fn detect_screen_reader(&self) -> Option<String> {
-        let screen_reader = unsafe {
-            Tolk_DetectScreenReader()
-        };
+        let screen_reader = unsafe { Tolk_DetectScreenReader() };
         if screen_reader.is_null() {
             None
         } else {
@@ -57,38 +51,36 @@ impl Tolk {
     }
 
     pub fn speak<S: Into<String>>(&self, s: S, interrupt: bool) -> bool {
-        unsafe {
-            Tolk_Speak(str_to_wchar_t(&s.into()), interrupt)
-        }
+        unsafe { Tolk_Speak(str_to_wchar_t(&s.into()), interrupt) }
     }
 
     pub fn braille<S: Into<String>>(&self, s: S) -> bool {
-        unsafe {
-            Tolk_Braille(str_to_wchar_t(&s.into()))
-        }
+        unsafe { Tolk_Braille(str_to_wchar_t(&s.into())) }
     }
 
     pub fn is_speaking(&self) -> bool {
-        unsafe {
-            Tolk_IsSpeaking()
-        }
+        unsafe { Tolk_IsSpeaking() }
     }
 
     pub fn silence(&self) -> bool {
-        unsafe {
-            Tolk_Silence()
-        }
+        unsafe { Tolk_Silence() }
     }
 }
 
 impl Drop for Tolk {
     fn drop(&mut self) {
-        unsafe { Tolk_Unload(); }
+        unsafe {
+            Tolk_Unload();
+        }
     }
 }
 
 fn str_to_wchar_t(s: &str) -> *const u16 {
-    OsStr::new(s).encode_wide().chain(Some(0).into_iter()).collect::<Vec<_>>().as_ptr()
+    OsStr::new(s)
+        .encode_wide()
+        .chain(Some(0).into_iter())
+        .collect::<Vec<_>>()
+        .as_ptr()
 }
 
 unsafe fn string_from_wchar_t(orig: *const u16) -> String {
@@ -109,5 +101,7 @@ fn test_drop_behavior() {
         assert_eq!(Tolk_IsLoaded(), true);
     }
 
-    unsafe { assert_eq!(Tolk_IsLoaded(), false); }
+    unsafe {
+        assert_eq!(Tolk_IsLoaded(), false);
+    }
 }

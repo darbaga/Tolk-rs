@@ -10,7 +10,11 @@ fn main() -> io::Result<()> {
         println!("No screen reader detected");
     }
     tolk.try_sapi(true);
-    println!("Has speech: {}, has Braille: {}", tolk.has_speech(), tolk.has_braille());
+    println!(
+        "Has speech: {}, has Braille: {}",
+        tolk.has_speech(),
+        tolk.has_braille()
+    );
     tolk.output("Hello, world.", true);
     tolk.speak("This wil only speak.", false);
     tolk.braille("This will only be brailled.");
