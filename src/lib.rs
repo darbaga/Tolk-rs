@@ -15,9 +15,14 @@ impl Tolk {
         Tolk
     }
 
-    pub fn detect_screen_reader(&self) -> String {
-        unsafe {
-            return string_from_wchar_t(Tolk_DetectScreenReader());
+    pub fn detect_screen_reader(&self) -> Option<String> {
+        let screen_reader = unsafe {
+            Tolk_DetectScreenReader()
+        };
+        if screen_reader.is_null() {
+            None
+        } else {
+            Some(unsafe { string_from_wchar_t(screen_reader) })
         }
     }
 
