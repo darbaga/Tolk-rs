@@ -8,6 +8,7 @@ keywords = ["accessibility", "a11y"]
 categories = ["api-bindings"]
 license = "MIT"
 version = "0.1.1"
+edition = "2018"
 
 [dependencies]
 tolk-sys = "0.1.0"
