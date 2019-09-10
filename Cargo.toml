@@ -7,8 +7,8 @@ readme = "README.md"
 keywords = ["accessibility", "a11y"]
 categories = ["api-bindings"]
 license = "MIT"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2018"
 
 [dependencies]
-tolk-sys = { path = "../tolk-sys" }
+tolk-sys = "0.2"
