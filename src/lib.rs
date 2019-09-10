@@ -1,6 +1,4 @@
-#![cfg(windows)]
-extern crate tolk_sys;
-
+#[cfg(target_os = "windows")]
 use std::ffi::OsStr;
 use std::os::windows::ffi::OsStrExt;
 use std::slice::from_raw_parts;
@@ -17,49 +15,72 @@ impl Tolk {
         Tolk
     }
 
-    pub fn detect_screen_reader(&self) -> String {
+    pub fn try_sapi(&self, v: bool) {
         unsafe {
-            return string_from_wchar_t(Tolk_DetectScreenReader());
+            Tolk_TrySAPI(v);
         }
     }
 
-    pub fn output(&self, s: &str, interrupt: bool) {
+    pub fn prefer_sapi(&self, v: bool) {
         unsafe {
-            Tolk_Output(str_to_wchar_t(s), interrupt);
+            Tolk_PreferSAPI(v);
         }
     }
 
-    pub fn speak (&self, s: &str, interrupt: bool) {
-        if unsafe { Tolk_HasSpeech() } {
-            unsafe {
-                Tolk_Speak(str_to_wchar_t(s), interrupt);
-            }
+    pub fn has_speech(&self) -> bool {
+        unsafe { Tolk_HasSpeech() }
+    }
+
+    pub fn has_braille(&self) -> bool {
+        unsafe { Tolk_HasBraille() }
+    }
+
+    pub fn detect_screen_reader(&self) -> Option<String> {
+        let screen_reader = unsafe { Tolk_DetectScreenReader() };
+        if screen_reader.is_null() {
+            None
         } else {
-            // Fallback on self.output
-            self.output(s, interrupt)
+            Some(unsafe { string_from_wchar_t(screen_reader) })
         }
     }
 
-    pub fn braille (&self, s: &str) {
-        if unsafe { Tolk_HasBraille() } {
-            unsafe {
-                Tolk_Braille(str_to_wchar_t(s));
-            }
-        } else {
-            // Fallback on self.output
-            self.output(s, false);
+    pub fn output<S: Into<String>>(&self, s: S, interrupt: bool) {
+        unsafe {
+            Tolk_Output(str_to_wchar_t(&s.into()), interrupt);
         }
+    }
+
+    pub fn speak<S: Into<String>>(&self, s: S, interrupt: bool) -> bool {
+        unsafe { Tolk_Speak(str_to_wchar_t(&s.into()), interrupt) }
+    }
+
+    pub fn braille<S: Into<String>>(&self, s: S) -> bool {
+        unsafe { Tolk_Braille(str_to_wchar_t(&s.into())) }
+    }
+
+    pub fn is_speaking(&self) -> bool {
+        unsafe { Tolk_IsSpeaking() }
+    }
+
+    pub fn silence(&self) -> bool {
+        unsafe { Tolk_Silence() }
     }
 }
 
 impl Drop for Tolk {
     fn drop(&mut self) {
-        unsafe { Tolk_Unload(); }
+        unsafe {
+            Tolk_Unload();
+        }
     }
 }
 
 fn str_to_wchar_t(s: &str) -> *const u16 {
-    OsStr::new(s).encode_wide().chain(Some(0).into_iter()).collect::<Vec<_>>().as_ptr()
+    OsStr::new(s)
+        .encode_wide()
+        .chain(Some(0).into_iter())
+        .collect::<Vec<_>>()
+        .as_ptr()
 }
 
 unsafe fn string_from_wchar_t(orig: *const u16) -> String {
@@ -80,5 +101,7 @@ fn test_drop_behavior() {
         assert_eq!(Tolk_IsLoaded(), true);
     }
 
-    unsafe { assert_eq!(Tolk_IsLoaded(), false); }
+    unsafe {
+        assert_eq!(Tolk_IsLoaded(), false);
+    }
 }
