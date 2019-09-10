@@ -27,25 +27,15 @@ impl Tolk {
         }
     }
 
-    pub fn speak (&self, s: &str, interrupt: bool) {
-        if unsafe { Tolk_HasSpeech() } {
-            unsafe {
-                Tolk_Speak(str_to_wchar_t(s), interrupt);
-            }
-        } else {
-            // Fallback on self.output
-            self.output(s, interrupt)
+    pub fn speak (&self, s: &str, interrupt: bool) -> bool {
+        unsafe {
+            Tolk_Speak(str_to_wchar_t(s), interrupt)
         }
     }
 
-    pub fn braille (&self, s: &str) {
-        if unsafe { Tolk_HasBraille() } {
-            unsafe {
-                Tolk_Braille(str_to_wchar_t(s));
-            }
-        } else {
-            // Fallback on self.output
-            self.output(s, false);
+    pub fn braille (&self, s: &str) -> bool {
+        unsafe {
+            Tolk_Braille(str_to_wchar_t(s))
         }
     }
 }
