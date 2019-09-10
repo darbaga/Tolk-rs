@@ -1,6 +1,4 @@
-#![cfg(windows)]
-extern crate tolk_sys;
-
+#[cfg(target_os = "windows")]
 use std::ffi::OsStr;
 use std::os::windows::ffi::OsStrExt;
 use std::slice::from_raw_parts;
