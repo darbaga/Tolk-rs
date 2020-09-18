@@ -1,4 +1,5 @@
 [package]
+
 authors = ["Dhruv kumar <darbaga10@gmail.com>"]
 name = "tolk"
 description = "bindings to tolk.dll, a library to talk to screen readers"
@@ -12,3 +13,4 @@ edition = "2018"
 
 [dependencies]
 tolk-sys = "0.2"
+widestring = "0.4"

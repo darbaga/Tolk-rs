@@ -1,9 +1,6 @@
 #[cfg(target_os = "windows")]
-use std::ffi::OsStr;
-use std::os::windows::ffi::OsStrExt;
-use std::slice::from_raw_parts;
-
 use tolk_sys::*;
+use widestring::U16CString;
 
 pub struct Tolk;
 
@@ -40,22 +37,43 @@ impl Tolk {
         if screen_reader.is_null() {
             None
         } else {
-            Some(unsafe { string_from_wchar_t(screen_reader) })
+            let screen_reader = unsafe { U16CString::from_ptr_with_nul(screen_reader, 64) };
+            if let Some(screen_reader) = screen_reader.ok() {
+                screen_reader.to_string().ok()
+            } else {
+                None
+            }
         }
     }
 
     pub fn output<S: Into<String>>(&self, s: S, interrupt: bool) {
-        unsafe {
-            Tolk_Output(str_to_wchar_t(&s.into()), interrupt);
+        let s = s.into();
+        let s = U16CString::from_str(s);
+        if let Some(s) = s.ok() {
+            unsafe {
+                Tolk_Output(s.as_ptr(), interrupt);
+            }
         }
     }
 
     pub fn speak<S: Into<String>>(&self, s: S, interrupt: bool) -> bool {
-        unsafe { Tolk_Speak(str_to_wchar_t(&s.into()), interrupt) }
+        let s = s.into();
+        let s = U16CString::from_str(s);
+        if let Some(s) = s.ok() {
+            unsafe { Tolk_Speak(s.as_ptr(), interrupt) }
+        } else {
+            false
+        }
     }
 
     pub fn braille<S: Into<String>>(&self, s: S) -> bool {
-        unsafe { Tolk_Braille(str_to_wchar_t(&s.into())) }
+        let s = s.into();
+        let s = U16CString::from_str(s);
+        if let Some(s) = s.ok() {
+            unsafe { Tolk_Braille(s.as_ptr()) }
+        } else {
+            false
+        }
     }
 
     pub fn is_speaking(&self) -> bool {
@@ -73,25 +91,6 @@ impl Drop for Tolk {
             Tolk_Unload();
         }
     }
-}
-
-fn str_to_wchar_t(s: &str) -> *const u16 {
-    OsStr::new(s)
-        .encode_wide()
-        .chain(Some(0).into_iter())
-        .collect::<Vec<_>>()
-        .as_ptr()
-}
-
-unsafe fn string_from_wchar_t(orig: *const u16) -> String {
-    let mut len = 0;
-
-    while *orig.offset(len) != 0 {
-        len += 1;
-    }
-
-    let sl = from_raw_parts(orig, len as usize);
-    String::from_utf16(sl).unwrap()
 }
 
 #[test]
