@@ -2,6 +2,7 @@
 use tolk_sys::*;
 use widestring::U16CString;
 
+#[derive(Clone, Debug)]
 pub struct Tolk;
 
 impl Tolk {
