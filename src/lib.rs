@@ -33,20 +33,6 @@ impl Tolk {
         unsafe { Tolk_HasBraille() }
     }
 
-    pub fn detect_screen_reader(&self) -> Option<String> {
-        let screen_reader = unsafe { Tolk_DetectScreenReader() };
-        if screen_reader.is_null() {
-            None
-        } else {
-            let screen_reader = unsafe { U16CString::from_ptr_with_nul(screen_reader, 64) };
-            if let Some(screen_reader) = screen_reader.ok() {
-                screen_reader.to_string().ok()
-            } else {
-                None
-            }
-        }
-    }
-
     pub fn output<S: Into<String>>(&self, s: S, interrupt: bool) {
         let s = s.into();
         let s = U16CString::from_str(s);
@@ -83,6 +69,20 @@ impl Tolk {
 
     pub fn silence(&self) -> bool {
         unsafe { Tolk_Silence() }
+    }
+
+    pub fn detect_screen_reader() -> Option<String> {
+        let screen_reader = unsafe { Tolk_DetectScreenReader() };
+        if screen_reader.is_null() {
+            None
+        } else {
+            let screen_reader = unsafe { U16CString::from_ptr_with_nul(screen_reader, 64) };
+            if let Some(screen_reader) = screen_reader.ok() {
+                screen_reader.to_string().ok()
+            } else {
+                None
+            }
+        }
     }
 }
 
