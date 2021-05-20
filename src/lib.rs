@@ -1,16 +1,30 @@
 #[cfg(target_os = "windows")]
+use std::sync::{Arc, Mutex};
+
+use lazy_static::lazy_static;
 use tolk_sys::*;
 use widestring::U16CString;
+
+lazy_static! {
+    static ref TOLK: Mutex<Option<Arc<Tolk>>> = Mutex::new(None);
+}
 
 #[derive(Clone, Debug)]
 pub struct Tolk;
 
 impl Tolk {
-    pub fn new() -> Tolk {
-        unsafe {
-            Tolk_Load();
+    pub fn new() -> Arc<Tolk> {
+        let mut tolk = TOLK.lock().unwrap();
+        if let Some(tolk) = tolk.as_mut() {
+            tolk.clone()
+        } else {
+            unsafe {
+                Tolk_Load();
+            }
+            let new_tolk = Arc::new(Tolk);
+            *tolk = Some(new_tolk.clone());
+            new_tolk
         }
-        Tolk
     }
 
     pub fn try_sapi(&self, v: bool) {
@@ -71,7 +85,7 @@ impl Tolk {
         unsafe { Tolk_Silence() }
     }
 
-    pub fn detect_screen_reader() -> Option<String> {
+    pub fn detect_screen_reader(&self) -> Option<String> {
         let screen_reader = unsafe { Tolk_DetectScreenReader() };
         if screen_reader.is_null() {
             None
@@ -88,20 +102,16 @@ impl Tolk {
 
 impl Drop for Tolk {
     fn drop(&mut self) {
-        unsafe {
-            Tolk_Unload();
+        let tolk = TOLK.lock().unwrap();
+        let unload = if let Some(tolk) = &*tolk {
+            Arc::strong_count(&tolk) == 0
+        } else {
+            false
+        };
+        if unload {
+            unsafe {
+                Tolk_Unload();
+            }
         }
-    }
-}
-
-#[test]
-fn test_drop_behavior() {
-    unsafe {
-        let f = Tolk::new();
-        assert_eq!(Tolk_IsLoaded(), true);
-    }
-
-    unsafe {
-        assert_eq!(Tolk_IsLoaded(), false);
     }
 }
